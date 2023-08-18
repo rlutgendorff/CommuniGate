@@ -1,7 +1,10 @@
 ﻿using CommuniGate.Commands;
+using CommuniGate.Middlewares;
 using CommuniGate.Queries;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
+using System;
+using System.Threading;
 
 namespace CommuniGate;
 
@@ -18,43 +21,51 @@ public class CommuniGator : ICommuniGator
     public Task<IResult<TResponse>> Execute<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
     {
         var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
-        return Execute<IResult<TResponse>>(handlerType, query, cancellationToken);
 
-        //var middlewares = _container.GetInstances<IPipelineMiddleware<IQuery<TResult>, TResult>>();
-
-        //using (AsyncScopedLifestyle.BeginScope(_container))
-        //{
-
-        //    dynamic handler = _container.GetInstance(handlerType);
-        //    return handler.HandleAsync((dynamic)query, cancellationToken);
-        //}
+        return ExecuteWithResponse<IQuery<TResponse>, TResponse>(handlerType, query, cancellationToken);
     }
 
     public Task<IResult<TResponse>> Execute<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
     {
         var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResponse));
-        return Execute<IResult<TResponse>>(handlerType, command, cancellationToken);
-
-        //using (AsyncScopedLifestyle.BeginScope(_container))
-        //{
-        //    var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResponse));
-        //    dynamic handler = _container.GetInstance(handlerType);
-        //    return handler.HandleAsync((dynamic)command, cancellationToken);
-        //}
+        return ExecuteWithResponse<ICommand<TResponse>, TResponse>(handlerType, command, cancellationToken);
     }
 
     public Task<IResult> Execute(ICommand command, CancellationToken cancellationToken = default)
     {
         var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
-        return Execute<IResult>(handlerType, command, cancellationToken);
+        return ExecuteWithoutResponse<ICommand>(handlerType, command, cancellationToken);
     }
 
-    private Task<TResponse> Execute<TResponse>(Type handlerType, object obj, CancellationToken cancellationToken = default)
+    private Task<IResult<TResponse>> ExecuteWithResponse<TCommunication, TResponse>(Type handlerType, object obj, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
         {
-            dynamic handler = _container.GetInstance(handlerType);
-            return handler.HandleAsync((dynamic)obj, cancellationToken);
+            Task<IResult<TResponse>> Handler() => (Task<IResult<TResponse>>)
+                ((dynamic)_container.GetInstance(handlerType))
+                .HandleAsync((dynamic)obj, cancellationToken);
+
+            return _container.GetAllInstances<IPipelineMiddleware<TCommunication, TResponse>>()
+                .Reverse()
+                .Aggregate((RequestHandlerDelegate<TResponse>)Handler,
+                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken))();
         }
     }
+    
+    private Task<IResult> ExecuteWithoutResponse<TCommunication>(Type handlerType, object obj, CancellationToken cancellationToken = default)
+    {
+        using (AsyncScopedLifestyle.BeginScope(_container))
+        {
+            Task<IResult> Handler() => (Task<IResult>)
+                ((dynamic)_container.GetInstance(handlerType))
+                .HandleAsync((dynamic)obj, cancellationToken);
+
+            return _container.GetAllInstances<IPipelineMiddleware<TCommunication>>()
+                .Reverse()
+                .Aggregate((RequestHandlerDelegate)Handler,
+                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken))();
+        }
+    }
+
+    
 }

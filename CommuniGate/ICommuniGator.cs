@@ -5,7 +5,7 @@ namespace CommuniGate;
 
 public interface ICommuniGator
 {
-    Task<IResult<TResult>> Execute<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
+    Task<IResult<TResponse>> Execute<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default);
 
     Task<IResult<TResponse>> Execute<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
 
