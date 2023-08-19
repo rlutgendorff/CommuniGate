@@ -19,7 +19,9 @@ internal class CommuniGateContainer
         Container.Register(typeof(ICommandHandler<>), assemblies);
         Container.Register(typeof(ICommandHandler<,>), assemblies);
 
-        Container.Collection.Register(typeof(IEventHandler), assemblies);
+        Container.Collection.Register(typeof(IEventHandler<>), assemblies);
+        Container.Collection.Register(typeof(IEventPipelineMiddleware<>), assemblies);
+        Container.Collection.Register(typeof(IPipelineMiddleware<>), assemblies);
         Container.Collection.Register(typeof(IPipelineMiddleware<,>), assemblies);
         Container.Collection.Register(typeof(IPostProcessor<>), assemblies);
         Container.Collection.Register(typeof(IPreProcessor<>), assemblies);

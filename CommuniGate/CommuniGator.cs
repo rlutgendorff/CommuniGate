@@ -5,6 +5,7 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
 using System.Threading;
+using CommuniGate.Events;
 
 namespace CommuniGate;
 
@@ -35,6 +36,27 @@ public class CommuniGator : ICommuniGator
     {
         var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
         return ExecuteWithoutResponse<ICommand>(handlerType, command, cancellationToken);
+    }
+
+    public Task Execute(IEvent @event, CancellationToken cancellationToken = default)
+    {
+        var handlerType = typeof(IEventHandler<>).MakeGenericType(@event.GetType());
+        return Publish<IEvent>(handlerType, @event, cancellationToken);
+    }
+
+    private Task Publish<TEvent>(Type handlerType, TEvent @event, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent
+    {
+        using (AsyncScopedLifestyle.BeginScope(_container))
+        {
+            Task Handler() => Task.WhenAll(
+                _container.GetAllInstances<IEventHandler<TEvent>>().ToList().Select(x=> x.HandleAsync(@event, cancellationToken)).ToArray());
+
+            return _container.GetAllInstances<IEventPipelineMiddleware<TEvent>>()
+                .Reverse()
+                .Aggregate((EventHandlerDelegate)Handler,
+                    (next, pipeline) => () => pipeline.Handle(@event, next, cancellationToken))();
+        }
     }
 
     private Task<IResult<TResponse>> ExecuteWithResponse<TCommunication, TResponse>(Type handlerType, object obj, CancellationToken cancellationToken = default)

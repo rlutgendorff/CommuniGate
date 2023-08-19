@@ -54,5 +54,17 @@ namespace CommuniGate.Tests
 
             //Assert
         }
+
+        [Fact]
+        public async Task TestEventHandler()
+        {
+            //Arrange
+            var sut = _serviceProvider.GetService<ICommuniGator>();
+
+            //Act
+            await sut.Execute(new TestEvent(), CancellationToken.None);
+
+            //Assert
+        }
     }
 }
