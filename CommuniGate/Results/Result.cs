@@ -1,4 +1,4 @@
-﻿namespace CommuniGate;
+﻿namespace CommuniGate.Results;
 
 public class Result : IResult
 {
@@ -25,7 +25,7 @@ public class Result<TResult> : Result, IResult<TResult>
         Value = result;
     }
 
-    public Result(Exception exception) : base(exception) 
+    public Result(Exception exception) : base(exception)
     {
     }
 

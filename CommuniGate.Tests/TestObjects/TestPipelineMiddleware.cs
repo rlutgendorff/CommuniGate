@@ -1,6 +1,8 @@
-﻿using CommuniGate.Events;
+﻿using CommuniGate.Bases;
+using CommuniGate.Events;
 using CommuniGate.Middlewares;
 using CommuniGate.Queries;
+using CommuniGate.Results;
 
 namespace CommuniGate.Tests.TestObjects;
 

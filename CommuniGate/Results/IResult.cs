@@ -1,4 +1,4 @@
-﻿namespace CommuniGate;
+﻿namespace CommuniGate.Results;
 
 public interface IResult
 {

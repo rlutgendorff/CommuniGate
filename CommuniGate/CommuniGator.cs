@@ -6,6 +6,7 @@ using SimpleInjector.Lifestyles;
 using System;
 using System.Threading;
 using CommuniGate.Events;
+using CommuniGate.Results;
 
 namespace CommuniGate;
 
@@ -41,7 +42,7 @@ public class CommuniGator : ICommuniGator
     public Task Execute(IEvent @event, CancellationToken cancellationToken = default)
     {
         var handlerType = typeof(IEventHandler<>).MakeGenericType(@event.GetType());
-        return Publish<IEvent>(handlerType, @event, cancellationToken);
+        return Publish(handlerType, @event, cancellationToken);
     }
 
     private Task Publish<TEvent>(Type handlerType, TEvent @event, CancellationToken cancellationToken = default)

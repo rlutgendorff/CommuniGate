@@ -1,4 +1,6 @@
-﻿namespace CommuniGate.Commands;
+﻿using CommuniGate.Results;
+
+namespace CommuniGate.Commands;
 
 public interface ICommandHandler<in TRequest>
     where TRequest : class, ICommand

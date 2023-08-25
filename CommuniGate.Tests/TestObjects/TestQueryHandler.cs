@@ -1,4 +1,5 @@
 ﻿using CommuniGate.Queries;
+using CommuniGate.Results;
 
 namespace CommuniGate.Tests.TestObjects;
 

@@ -1,14 +1,12 @@
-﻿namespace CommuniGate.Commands;
+﻿using CommuniGate.Bases;
 
-public interface IBaseCommand : ICommunication
+namespace CommuniGate.Commands;
+
+public interface ICommand 
 {
 }
 
-public interface ICommand : IBaseCommand
-{
-}
-
-public interface ICommand<out TResult> : IBaseCommand
+public interface ICommand<out TResult> : ICommunication
 {
 
 }

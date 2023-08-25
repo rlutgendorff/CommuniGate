@@ -12,44 +12,29 @@ internal class CommuniGateContainer
 {
     internal Container Container { get; } = Create();
 
-    internal void Init(Assembly[] assemblies)
+    internal void Init(Assembly[] assembliesToScan)
     {
+        assembliesToScan = AddThisAssemblyToAssemblies(assembliesToScan);
+
         Container.Register<ICommuniGator, CommuniGator>();
-        Container.Register(typeof(IQueryHandler<,>), assemblies);
-        Container.Register(typeof(ICommandHandler<>), assemblies);
-        Container.Register(typeof(ICommandHandler<,>), assemblies);
+        Container.Register(typeof(IQueryHandler<,>), assembliesToScan);
+        Container.Register(typeof(ICommandHandler<>), assembliesToScan);
+        Container.Register(typeof(ICommandHandler<,>), assembliesToScan);
 
-        Container.Collection.Register(typeof(IEventHandler<>), assemblies);
-        Container.Collection.Register(typeof(IEventPipelineMiddleware<>), assemblies);
-        Container.Collection.Register(typeof(IPipelineMiddleware<>), assemblies);
-        Container.Collection.Register(typeof(IPipelineMiddleware<,>), assemblies);
-        Container.Collection.Register(typeof(IPostProcessor<>), assemblies);
-        Container.Collection.Register(typeof(IPreProcessor<>), assemblies);
-
-        
+        Container.Collection.Register(typeof(IEventHandler<>), assembliesToScan);
+        Container.Collection.Register(typeof(IEventPipelineMiddleware<>), assembliesToScan);
+        Container.Collection.Register(typeof(IPipelineMiddleware<>), assembliesToScan);
+        Container.Collection.Register(typeof(IPipelineMiddleware<,>), assembliesToScan);
     }
 
-    //public TType GetInstance<TType>()
-    //    where TType : class
-    //{
-    //    return _container.GetInstance<TType>();
-    //}
+    private Assembly[] AddThisAssemblyToAssemblies(Assembly[] assembliesToScan)
+    {
+        var newArray = new Assembly[assembliesToScan.Length + 1];
+        Array.Copy(assembliesToScan, newArray, assembliesToScan.Length);
+        newArray[^1] = GetType().Assembly;
 
-    //public object GetInstance(Type type)
-    //{
-    //    return _container.GetInstance(type);
-    //}
-
-    //public IEnumerable<TType> GetInstances<TType>()
-    //    where TType : class
-    //{
-    //    return _container.GetAllInstances<TType>();
-    //}
-
-    //public IEnumerable<object> GetInstances(Type type)
-    //{
-    //    return _container.GetAllInstances(type);
-    //}
+        return newArray;
+    }
 
     private static Container Create()
     {
