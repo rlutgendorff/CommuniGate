@@ -1,5 +1,6 @@
 using CommuniGate.Extensions;
 using CommuniGate.Tests.TestObjects;
+using CommuniGate.Tests.TestObjects.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommuniGate.Tests
@@ -82,13 +83,27 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            await sut.Execute(new TestEvent(), CancellationToken.None);
+            await sut.Publish(new TestEvent(), CancellationToken.None);
 
             //Assert
             Assert.Contains(nameof(TestEventPipelineMiddleware), calledPipelines);
             Assert.Collection(calledHandlers, 
                 item => Assert.Contains(nameof(TestEventHandler), item), 
                 item => Assert.Contains(nameof(TestEventHandler2), item));
+        }
+
+        [Fact]
+        public async Task Execute_ThrowsException_ResultIsFailed()
+        {
+            //Arrange
+
+            var sut = _serviceProvider.GetService<ICommuniGator>();
+
+            //Act
+            var result = await sut.Execute(new ExceptionCommand(), CancellationToken.None);
+
+            //Assert
+            Assert.False(result.IsSuccess);
         }
     }
 }
