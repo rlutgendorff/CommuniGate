@@ -31,8 +31,11 @@ public class TestPipelineMiddlewareWithoutResponse : IPipelineMiddleware<ICommun
 
 public class TestEventPipelineMiddleware : IEventPipelineMiddleware<IEvent>
 {
+    public static event EventHandler? OnHandling;
+
     public Task Handle(IEvent @event, EventHandlerDelegate next, CancellationToken cancellationToken)
     {
+        OnHandling?.Invoke(this, EventArgs.Empty);
         return next.Invoke();
     }
 }

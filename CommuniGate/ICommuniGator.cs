@@ -7,18 +7,8 @@ namespace CommuniGate;
 
 public interface ICommuniGator
 {
-    Task<IResult<TResponse>> ExecuteQuery<TQuery, TResponse>(TQuery query,
-        CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TResponse>;
- 
-
-     Task<IResult<TResponse>> ExecuteCommand<TCommand, TResponse>(TCommand command,
-        CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TResponse>;
-
-    Task<IResult> ExecuteCommand<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand;
-
-    Task ExecuteEvent<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent;
+    Task<IResult<TResponse>> Execute<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default);
+    Task<IResult<TResponse>> Execute<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
+    Task<IResult> Execute(ICommand command, CancellationToken cancellationToken = default);
+    Task Execute(IEvent @event, CancellationToken cancellationToken = default);
 }

@@ -26,7 +26,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.ExecuteQuery<TestQuery, string>(new TestQuery(), CancellationToken.None);
+            var result = await sut.Execute(new TestQuery(), CancellationToken.None);
 
             //Assert
         }
@@ -38,7 +38,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.ExecuteCommand<WithResultCommand, int>(new WithResultCommand { Test = 1}, CancellationToken.None);
+            var result = await sut.Execute(new WithResultCommand { Test = 1}, CancellationToken.None);
 
             //Assert
         }
@@ -50,21 +50,45 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.ExecuteCommand(new WithoutResultCommand(), CancellationToken.None);
+            var result = await sut.Execute(new WithoutResultCommand(), CancellationToken.None);
 
             //Assert
         }
 
         [Fact]
-        public async Task TestEventHandler()
+        public async Task Execute_TestEventHandler()
         {
             //Arrange
+            var calledPipelines = new List<string>();
+            TestEventPipelineMiddleware.OnHandling += (sender, _) =>
+            {
+                var name = sender?.GetType().Name;
+                if (name != null) calledPipelines.Add(name);
+            };
+
+            var calledHandlers = new List<string>();
+            TestEventHandler.OnHandling += (sender, _) =>
+            {
+                var name = sender?.GetType().Name;
+                if (name != null) calledHandlers.Add(name);
+            };
+
+            TestEventHandler2.OnHandling += (sender, _) =>
+            {
+                var name = sender?.GetType().Name;
+                if (name != null) calledHandlers.Add(name);
+            };
+
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            await sut.ExecuteEvent(new TestEvent(), CancellationToken.None);
+            await sut.Execute(new TestEvent(), CancellationToken.None);
 
             //Assert
+            Assert.Contains(nameof(TestEventPipelineMiddleware), calledPipelines);
+            Assert.Collection(calledHandlers, 
+                item => Assert.Contains(nameof(TestEventHandler), item), 
+                item => Assert.Contains(nameof(TestEventHandler2), item));
         }
     }
 }
