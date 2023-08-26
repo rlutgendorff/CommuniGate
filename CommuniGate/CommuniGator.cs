@@ -3,8 +3,6 @@ using CommuniGate.Middlewares;
 using CommuniGate.Queries;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
-using System;
-using System.Threading;
 using CommuniGate.Events;
 using CommuniGate.Results;
 
@@ -14,7 +12,7 @@ public class CommuniGator : ICommuniGator
 {
     private readonly Container _container;
 
-    
+
     public CommuniGator(Container container)
     {
         _container = container;
@@ -39,24 +37,31 @@ public class CommuniGator : ICommuniGator
         return ExecuteWithoutResponse<ICommand>(handlerType, command, cancellationToken);
     }
 
-    public Task Execute(IEvent @event, CancellationToken cancellationToken = default)
+    public Task Publish(IEvent @event, CancellationToken cancellationToken = default)
     {
         var handlerType = typeof(IEventHandler<>).MakeGenericType(@event.GetType());
         return Publish(handlerType, @event, cancellationToken);
     }
 
-    private Task Publish<TEvent>(Type handlerType, TEvent @event, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent
+    private Task Publish(Type handlerType, IEvent @event, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
         {
-            Task Handler() => Task.WhenAll(
-                _container.GetAllInstances<IEventHandler<TEvent>>().ToList().Select(x=> x.HandleAsync(@event, cancellationToken)).ToArray());
+            Task Handler()
+            {
+                var handlers = (List<dynamic>)_container.GetAllInstances(handlerType).ToList();
 
-            return _container.GetAllInstances<IEventPipelineMiddleware<TEvent>>()
+                return Task
+                    .WhenAll(handlers.Select(x => x.HandleAsync((dynamic)@event, cancellationToken))
+                    .Cast<Task>()
+                    .ToArray());
+            }
+
+            return _container
+                .GetAllInstances<IEventPipelineMiddleware<IEvent>>()
                 .Reverse()
                 .Aggregate((EventHandlerDelegate)Handler,
-                    (next, pipeline) => () => pipeline.Handle(@event, next, cancellationToken))();
+                    (next, pipeline) => () => pipeline.Handle((dynamic)@event, next, cancellationToken))();
         }
     }
 
@@ -74,7 +79,7 @@ public class CommuniGator : ICommuniGator
                     (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken))();
         }
     }
-    
+
     private Task<IResult> ExecuteWithoutResponse<TCommunication>(Type handlerType, object obj, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
@@ -90,5 +95,5 @@ public class CommuniGator : ICommuniGator
         }
     }
 
-    
+
 }

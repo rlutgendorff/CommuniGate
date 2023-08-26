@@ -56,15 +56,39 @@ namespace CommuniGate.Tests
         }
 
         [Fact]
-        public async Task TestEventHandler()
+        public async Task Execute_TestEventHandler()
         {
             //Arrange
+            var calledPipelines = new List<string>();
+            TestEventPipelineMiddleware.OnHandling += (sender, _) =>
+            {
+                var name = sender?.GetType().Name;
+                if (name != null) calledPipelines.Add(name);
+            };
+
+            var calledHandlers = new List<string>();
+            TestEventHandler.OnHandling += (sender, _) =>
+            {
+                var name = sender?.GetType().Name;
+                if (name != null) calledHandlers.Add(name);
+            };
+
+            TestEventHandler2.OnHandling += (sender, _) =>
+            {
+                var name = sender?.GetType().Name;
+                if (name != null) calledHandlers.Add(name);
+            };
+
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
             await sut.Execute(new TestEvent(), CancellationToken.None);
 
             //Assert
+            Assert.Contains(nameof(TestEventPipelineMiddleware), calledPipelines);
+            Assert.Collection(calledHandlers, 
+                item => Assert.Contains(nameof(TestEventHandler), item), 
+                item => Assert.Contains(nameof(TestEventHandler2), item));
         }
     }
 }
