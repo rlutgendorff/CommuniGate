@@ -1,14 +1,21 @@
 ﻿using CommuniGate.Bases;
 using CommuniGate.Events;
 using CommuniGate.Middlewares;
-using CommuniGate.Queries;
 using CommuniGate.Results;
 
 namespace CommuniGate.Tests.TestObjects;
 
-public class TestPipelineMiddleware : IPipelineMiddleware<ICommunication, string>
+public class TestPipelineMiddleware : IPipelineMiddleware<WithResultCommand, int>
 {
-    public Task<IResult<string>> Handle(ICommunication communication, RequestHandlerDelegate<string> next, CancellationToken cancellationToken)
+    public Task<IResult<int>> Handle(WithResultCommand request, RequestHandlerDelegate<int> next, CancellationToken cancellationToken)
+    {
+        return next.Invoke();
+    }
+}
+
+public class TestGenericPipelineMiddleware<TRequest, TResponse> : IPipelineMiddleware<TRequest, TResponse>
+{
+    public Task<IResult<TResponse>> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         return next.Invoke();
     }

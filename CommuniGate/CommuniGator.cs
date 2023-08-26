@@ -20,29 +20,58 @@ public class CommuniGator : ICommuniGator
         _container = container;
     }
 
-    public Task<IResult<TResponse>> Execute<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
+    public Task<IResult<TResponse>> ExecuteQuery<TQuery, TResponse>(TQuery query, CancellationToken cancellationToken = default) 
+        where TQuery : class, IQuery<TResponse>
     {
-        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
-
-        return ExecuteWithResponse<IQuery<TResponse>, TResponse>(handlerType, query, cancellationToken);
+        using (AsyncScopedLifestyle.BeginScope(_container))
+        {
+            var handler = _container.GetInstance<IQueryHandler<TQuery, TResponse>>();
+            return handler.HandleAsync(query, cancellationToken);
+        }
     }
 
-    public Task<IResult<TResponse>> Execute<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
+    public Task<IResult<TResponse>> ExecuteCommand<TCommand, TResponse>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : class, ICommand<TResponse>
     {
-        var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResponse));
-        return ExecuteWithResponse<ICommand<TResponse>, TResponse>(handlerType, command, cancellationToken);
+        var pipelineBehaviors = _container.GetAllInstances<IPipelineMiddleware<TCommand, TResponse>>();
+        var reversedBehaviors = new List<IPipelineMiddleware<TCommand, TResponse>>(pipelineBehaviors);
+        reversedBehaviors.Reverse();
+
+        RequestHandlerDelegate<TResponse> currentDelegate = () => Handle<TCommand, TResponse>(command, cancellationToken);
+        foreach (var pipeline in reversedBehaviors)
+        {
+            var nextDelegate = currentDelegate;
+            currentDelegate = () => pipeline.Handle(command, nextDelegate, cancellationToken);
+        }
+
+        return currentDelegate();
     }
 
-    public Task<IResult> Execute(ICommand command, CancellationToken cancellationToken = default)
+    private Task<IResult<TResponse>> Handle<TCommand, TResponse>(TCommand command, CancellationToken cancellationToken) 
+        where TCommand : class, ICommand<TResponse>
     {
-        var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
-        return ExecuteWithoutResponse<ICommand>(handlerType, command, cancellationToken);
+        var handler = _container.GetInstance<ICommandHandler<TCommand, TResponse>>();
+        return handler.HandleAsync(command, cancellationToken);
     }
 
-    public Task Execute(IEvent @event, CancellationToken cancellationToken = default)
+    public Task<IResult> ExecuteCommand<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : class, ICommand
     {
-        var handlerType = typeof(IEventHandler<>).MakeGenericType(@event.GetType());
-        return Publish(handlerType, @event, cancellationToken);
+        using (AsyncScopedLifestyle.BeginScope(_container))
+        {
+            var handler = _container.GetInstance<ICommandHandler<TCommand>>();
+            return handler.HandleAsync(command, cancellationToken);
+        }
+    }
+
+    public Task ExecuteEvent<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent
+    {
+        using (AsyncScopedLifestyle.BeginScope(_container))
+        {
+            var handlers = _container.GetAllInstances<IEventHandler<TEvent>>();
+            return Task.WhenAll(handlers.Select(x => x.HandleAsync(@event, cancellationToken)));
+        }
     }
 
     private Task Publish<TEvent>(Type handlerType, TEvent @event, CancellationToken cancellationToken = default)

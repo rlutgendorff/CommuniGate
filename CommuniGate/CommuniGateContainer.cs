@@ -24,7 +24,20 @@ internal class CommuniGateContainer
         Container.Collection.Register(typeof(IEventHandler<>), assembliesToScan);
         Container.Collection.Register(typeof(IEventPipelineMiddleware<>), assembliesToScan);
         Container.Collection.Register(typeof(IPipelineMiddleware<>), assembliesToScan);
-        Container.Collection.Register(typeof(IPipelineMiddleware<,>), assembliesToScan);
+
+        RegisterHandlers(Container, typeof(IPipelineMiddleware<,>), assembliesToScan);
+    }
+
+    private static void RegisterHandlers(Container container, Type collectionType, Assembly[] assemblies)
+    {
+        // we have to do this because by default, generic type definitions (such as the Constrained Notification Handler) won't be registered
+        var handlerTypes = container.GetTypesToRegister(collectionType, assemblies, new TypesToRegisterOptions
+        {
+            IncludeGenericTypeDefinitions = true,
+            IncludeComposites = false,
+        });
+
+        container.Collection.Register(collectionType, handlerTypes);
     }
 
     private Assembly[] AddThisAssemblyToAssemblies(Assembly[] assembliesToScan)

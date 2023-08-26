@@ -26,7 +26,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new TestQuery(), CancellationToken.None);
+            var result = await sut.ExecuteQuery<TestQuery, string>(new TestQuery(), CancellationToken.None);
 
             //Assert
         }
@@ -38,7 +38,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new WithResultCommand { Test = 1}, CancellationToken.None);
+            var result = await sut.ExecuteCommand<WithResultCommand, int>(new WithResultCommand { Test = 1}, CancellationToken.None);
 
             //Assert
         }
@@ -50,7 +50,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new WithoutResultCommand(), CancellationToken.None);
+            var result = await sut.ExecuteCommand(new WithoutResultCommand(), CancellationToken.None);
 
             //Assert
         }
@@ -62,7 +62,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            await sut.Execute(new TestEvent(), CancellationToken.None);
+            await sut.ExecuteEvent(new TestEvent(), CancellationToken.None);
 
             //Assert
         }
