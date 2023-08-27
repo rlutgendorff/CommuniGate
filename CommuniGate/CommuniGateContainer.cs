@@ -23,11 +23,14 @@ internal class CommuniGateContainer
 
         Container.Collection.Register(typeof(IEventHandler<>), assembliesToScan);
 
+
         RegisterHandlers(Container, typeof(IEventPipelineMiddleware<>), assembliesToScan);
         RegisterHandlers(Container, typeof(IPipelineMiddleware<>), assembliesToScan);
         RegisterHandlers(Container, typeof(IPipelineMiddleware<,>), assembliesToScan);
         RegisterHandlers(Container, typeof(IPreExecution<>), assembliesToScan);
         RegisterHandlers(Container, typeof(IPostExecution<,>), assembliesToScan);
+
+        
     }
 
     private static void RegisterHandlers(Container container, Type collectionType, Assembly[] assemblies)
@@ -37,6 +40,9 @@ internal class CommuniGateContainer
             IncludeGenericTypeDefinitions = true,
             IncludeComposites = false,
         });
+
+        handlerTypes = handlerTypes.Where(x =>
+            x != typeof(ExceptionHandlingMiddleware<,>) && x != typeof(ExceptionHandlingMiddleware<>));
 
         container.Collection.Register(collectionType, handlerTypes);
     }

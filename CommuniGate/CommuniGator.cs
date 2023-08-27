@@ -77,12 +77,14 @@ public class CommuniGator : ICommuniGator
                 .Reverse()
                 .Aggregate((RequestHandlerDelegate<TResponse>)Handler,
                     (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken));
-                
-                return pipeline();
+
+                var e = new ExceptionHandlingMiddleware<TCommunication, TResponse>();
+
+                return e.Handle(obj, pipeline, cancellationToken);
         }
     }
 
-    private Task<IResult> ExecuteWithoutResponse<TCommunication>(Type handlerType, object obj, CancellationToken cancellationToken = default)
+    private Task<IResult> ExecuteWithoutResponse<TCommunication>(Type handlerType, TCommunication obj, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
         {
@@ -90,10 +92,14 @@ public class CommuniGator : ICommuniGator
                 ((dynamic)_container.GetInstance(handlerType))
                 .HandleAsync((dynamic)obj, cancellationToken);
 
-            return _container.GetAllInstances<IPipelineMiddleware<TCommunication>>()
+            var pipeline = _container.GetAllInstances<IPipelineMiddleware<TCommunication>>()
                 .Reverse()
                 .Aggregate((RequestHandlerDelegate)Handler,
-                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken))();
+                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken));
+
+            var e = new ExceptionHandlingMiddleware<TCommunication>();
+
+            return e.Handle(obj, pipeline, cancellationToken);
         }
     }
 
