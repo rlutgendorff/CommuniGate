@@ -65,7 +65,7 @@ public class CommuniGator : ICommuniGator
         }
     }
 
-    private Task<IResult<TResponse>> ExecuteWithResponse<TCommunication, TResponse>(Type handlerType, object obj, CancellationToken cancellationToken = default)
+    private Task<IResult<TResponse>> ExecuteWithResponse<TCommunication, TResponse>(Type handlerType, TCommunication obj, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
         {
@@ -73,10 +73,12 @@ public class CommuniGator : ICommuniGator
                 ((dynamic)_container.GetInstance(handlerType))
                 .HandleAsync((dynamic)obj, cancellationToken);
 
-            return _container.GetAllInstances<IPipelineMiddleware<TCommunication, TResponse>>()
+            var pipeline = _container.GetAllInstances<IPipelineMiddleware<TCommunication, TResponse>>()
                 .Reverse()
                 .Aggregate((RequestHandlerDelegate<TResponse>)Handler,
-                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken))();
+                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken));
+                
+                return pipeline();
         }
     }
 

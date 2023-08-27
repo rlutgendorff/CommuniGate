@@ -1,11 +1,11 @@
 ﻿using CommuniGate.Queries;
 using CommuniGate.Results;
 
-namespace CommuniGate.Tests.TestObjects;
+namespace CommuniGate.Tests.TestObjects.Handlers;
 
 public sealed class TestQuery : IQuery<string>
 {
-
+    public required string Name { get; set; }
 }
 
 public class TestQueryHandler : IQueryHandler<TestQuery, string>
@@ -19,6 +19,6 @@ public class TestQueryHandler : IQueryHandler<TestQuery, string>
 
     public Task<IResult<string>> HandleAsync(TestQuery query, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult<IResult<string>>(new Result<string>(_testService.Test()));
+        return Task.FromResult<IResult<string>>(new Result<string>(_testService.Test(query.Name)));
     }
 }

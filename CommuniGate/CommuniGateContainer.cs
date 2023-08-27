@@ -26,6 +26,8 @@ internal class CommuniGateContainer
         RegisterHandlers(Container, typeof(IEventPipelineMiddleware<>), assembliesToScan);
         RegisterHandlers(Container, typeof(IPipelineMiddleware<>), assembliesToScan);
         RegisterHandlers(Container, typeof(IPipelineMiddleware<,>), assembliesToScan);
+        RegisterHandlers(Container, typeof(IPreExecution<>), assembliesToScan);
+        RegisterHandlers(Container, typeof(IPostExecution<,>), assembliesToScan);
     }
 
     private static void RegisterHandlers(Container container, Type collectionType, Assembly[] assemblies)

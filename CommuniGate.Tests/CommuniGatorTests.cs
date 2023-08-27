@@ -27,9 +27,11 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new TestQuery(), CancellationToken.None);
+            var result = await sut.Execute(new TestQuery{Name = "Rolf"}, CancellationToken.None);
 
             //Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal("Hello world", result.Value);
         }
 
         [Fact]
