@@ -64,7 +64,10 @@ public record Result<TResult> : Result, IResult<TResult>
 
     public IResult<TResult> Match(Func<TResult, TResult> success, Func<Exception, TResult> failure)
     {
-        return !IsSuccess ? new Result<TResult>(Value!) : new Result<TResult>(failure(Exception!));
+        if (IsSuccess)
+            return new Result<TResult>(success(Value!));
+        else
+            return new Result<TResult>(failure(Exception!));
     }
 
     public IResult<TMapped> Map<TMapped>(Func<TResult, TMapped> success)

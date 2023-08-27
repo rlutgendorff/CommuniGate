@@ -30,8 +30,8 @@ namespace CommuniGate.Tests
             var result = await sut.Execute(new TestQuery{Name = "Rolf"}, CancellationToken.None);
 
             //Assert
-            Assert.True(result.IsSuccess);
-            Assert.Equal("Hello world", result.Value);
+            Assert.False(result.IsSuccess);
+            Assert.IsType<ApplicationException>(result.Exception);
         }
 
         [Fact]

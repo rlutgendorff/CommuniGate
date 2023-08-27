@@ -9,6 +9,6 @@ public class PostTestQueryExecution : IPostExecution<TestQuery, IResult<string>>
     public void Process(TestQuery request, IResult<string> response)
     {
         if (response.Value == "Hello world")
-            throw new Exception("Exception");
+            throw new ApplicationException("Exception");
     }
 }
