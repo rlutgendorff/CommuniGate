@@ -71,12 +71,12 @@ public class CommuniGator : ICommuniGator
         {
             Task<IResult<TResponse>> Handler() => (Task<IResult<TResponse>>)
                 ((dynamic)_container.GetInstance(handlerType))
-                .HandleAsync((dynamic)obj, cancellationToken);
+                .HandleAsync((dynamic)obj!, cancellationToken);
 
             var pipeline = _container.GetAllInstances<IPipelineMiddleware<TCommunication, TResponse>>()
                 .Reverse()
                 .Aggregate((RequestHandlerDelegate<TResponse>)Handler,
-                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken));
+                    (next, pipeline) => () => pipeline.Handle((dynamic)obj!, next, cancellationToken));
 
                 var e = new ExceptionHandlingMiddleware<TCommunication, TResponse>();
 
@@ -90,12 +90,12 @@ public class CommuniGator : ICommuniGator
         {
             Task<IResult> Handler() => (Task<IResult>)
                 ((dynamic)_container.GetInstance(handlerType))
-                .HandleAsync((dynamic)obj, cancellationToken);
+                .HandleAsync((dynamic)obj!, cancellationToken);
 
             var pipeline = _container.GetAllInstances<IPipelineMiddleware<TCommunication>>()
                 .Reverse()
                 .Aggregate((RequestHandlerDelegate)Handler,
-                    (next, pipeline) => () => pipeline.Handle((dynamic)obj, next, cancellationToken));
+                    (next, pipeline) => () => pipeline.Handle((dynamic)obj!, next, cancellationToken));
 
             var e = new ExceptionHandlingMiddleware<TCommunication>();
 

@@ -14,7 +14,7 @@ public class PreExecutionMiddleware<TRequest> : IPipelineMiddleware<TRequest>
 
     public Task<IResult> Handle(TRequest request, RequestHandlerDelegate next, CancellationToken cancellationToken)
     {
-        var cType = typeof(IPreExecution<>).MakeGenericType(request.GetType());
+        var cType = typeof(IPreExecution<>).MakeGenericType(request!.GetType());
         var processors = _container.GetAllInstances(cType).Cast<dynamic>().ToList();
 
         processors.ForEach(x => x.Process((dynamic)request));
@@ -36,7 +36,7 @@ public class PreExecutionMiddleware<TRequest, TResponse> : IPipelineMiddleware<T
 
     public Task<IResult<TResponse>> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var cType = typeof(IPreExecution<>).MakeGenericType(request.GetType());
+        var cType = typeof(IPreExecution<>).MakeGenericType(request!.GetType());
         var processors = _container.GetAllInstances(cType).Cast<dynamic>().ToList();
 
         processors.ForEach(x => x.Process((dynamic)request));
@@ -58,7 +58,7 @@ public class PreEventExecutionMiddleware<TEvent> : IEventPipelineMiddleware<TEve
 
     public Task Handle(TEvent @event, EventHandlerDelegate next, CancellationToken cancellationToken)
     {
-        var cType = typeof(IPreExecution<>).MakeGenericType(@event.GetType());
+        var cType = typeof(IPreExecution<>).MakeGenericType(@event!.GetType());
         var processors = _container.GetAllInstances(cType).Cast<dynamic>().ToList();
 
         processors.ForEach(x => x.Process((dynamic)@event));

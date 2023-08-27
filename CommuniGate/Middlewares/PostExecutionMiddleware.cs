@@ -16,7 +16,7 @@ public class PostExecutionMiddleware<TRequest> : IPipelineMiddleware<TRequest>
     {
         var result = next.Invoke();
 
-        var cType = typeof(IPostExecution<,>).MakeGenericType(request.GetType(), typeof(Task<IResult>));
+        var cType = typeof(IPostExecution<,>).MakeGenericType(request!.GetType(), typeof(Task<IResult>));
         var processors = _container.GetAllInstances(cType).Cast<dynamic>().ToList();
 
         processors.ForEach(x => x.Process((dynamic)request, (dynamic)result));
@@ -38,7 +38,7 @@ public class PostExecutionMiddleware<TRequest, TResponse> : IPipelineMiddleware<
     {
         var result = await next.Invoke();
 
-        var cType = typeof(IPostExecution<,>).MakeGenericType(request.GetType(), typeof(IResult<TResponse>));
+        var cType = typeof(IPostExecution<,>).MakeGenericType(request!.GetType(), typeof(IResult<TResponse>));
         var processors = _container.GetAllInstances(cType).Cast<dynamic>().ToList();
 
         processors.ForEach(x => x.Process((dynamic)request, (dynamic)result));
@@ -60,7 +60,7 @@ public class PostEventExecutionMiddleware<TEvent> : IEventPipelineMiddleware<TEv
     {
         var result = next.Invoke();
 
-        var cType = typeof(IPostExecution<,>).MakeGenericType(@event.GetType(), typeof(Task));
+        var cType = typeof(IPostExecution<,>).MakeGenericType(@event!.GetType(), typeof(Task));
         var processors = _container.GetAllInstances(cType).Cast<dynamic>().ToList();
 
         processors.ForEach(x => x.Process((dynamic)@event, (dynamic)result));
