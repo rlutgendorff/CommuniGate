@@ -6,14 +6,14 @@ namespace CommuniGate.Tests.Results;
 public class ResultTests
 {
     [Fact]
-    public void IfSuccess_WhenSuccessful_CallsAction()
+    public void WhenSuccess_WhenSuccessful_CallsAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result();
 
         //Act
-        sut.IfSuccess(() => isCalled = true);
+        sut.WhenSuccess(() => isCalled = true);
 
         //Assert
         Assert.True(sut.IsSuccess);
@@ -21,14 +21,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfSuccess_WhenGenericSuccessful_CallsAction()
+    public void WhenSuccess_WhenGenericSuccessful_CallsAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result<string>("Test");
 
         //Act
-        sut.IfSuccess(() => isCalled = true);
+        sut.WhenSuccess(() => isCalled = true);
 
         //Assert
         Assert.True(sut.IsSuccess);
@@ -36,14 +36,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfSuccess_WhenGenericSuccessful_CallsFunction()
+    public void WhenSuccess_WhenGenericSuccessful_CallsFunction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result<string>("Test");
 
         //Act
-        var result = sut.IfSuccess(s =>
+        var result = sut.WhenSuccess(s =>
         {
             isCalled = true;
             return s += " test";
@@ -56,14 +56,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfSuccess_WhenGenericSuccessful_CallsGenericAction()
+    public void WhenSuccess_WhenGenericSuccessful_CallsGenericAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result<string>("Test");
 
         //Act
-        sut.IfSuccess(s =>
+        sut.WhenSuccess(s =>
         {
             isCalled = true;
         });
@@ -75,14 +75,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfSuccess_WhenException_DoesntCallAction()
+    public void WhenSuccess_WhenException_DoesntCallAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result(new Exception("Test"));
 
         //Act
-        sut.IfSuccess(() => isCalled = true);
+        sut.WhenSuccess(() => isCalled = true);
 
         //Assert
         Assert.False(sut.IsSuccess);
@@ -90,14 +90,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfSuccess_WhenGenericException_DoesntCallAction()
+    public void WhenSuccess_WhenGenericException_DoesntCallAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result<string>(new Exception("Test"));
 
         //Act
-        sut.IfSuccess(() => isCalled = true);
+        sut.WhenSuccess(() => isCalled = true);
 
         //Assert
         Assert.False(sut.IsSuccess);
@@ -105,14 +105,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfSuccess_WhenGenericException_DoesntCallGenericAction()
+    public void WhenSuccess_WhenGenericException_DoesntCallGenericAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result<string>(new Exception("Test"));
 
         //Act
-        sut.IfSuccess(s => isCalled = true);
+        sut.WhenSuccess(s => isCalled = true);
 
         //Assert
         Assert.False(sut.IsSuccess);
@@ -120,14 +120,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfSuccess_WhenGenericException_DoesntCallFunction()
+    public void WhenSuccess_WhenGenericException_DoesntCallFunction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result<string>(new Exception("Test"));
 
         //Act
-        var result = sut.IfSuccess(s =>
+        var result = sut.WhenSuccess(s =>
         {
             isCalled = true;
             return s += " test";
@@ -140,14 +140,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfFailure_WhenException_CallsAction()
+    public void WhenFailure_WhenException_CallsAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result(new ApplicationException("Test"));
 
         //Act
-        sut.IfFailure((e) =>
+        sut.WhenFailure((e) =>
         {
             isCalled = true;
             Assert.IsType<ApplicationException>(sut.Exception);
@@ -159,14 +159,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfFailure_WhenGenericException_CallsAction()
+    public void WhenFailure_WhenGenericException_CallsAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result<string>(new ApplicationException("Test"));
 
         //Act
-        sut.IfFailure((e) =>
+        sut.WhenFailure((e) =>
         {
             isCalled = true;
             Assert.IsType<ApplicationException>(sut.Exception);
@@ -178,13 +178,13 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfFailure_WhenGenericException_CallsFunction()
+    public void WhenFailure_WhenGenericException_CallsFunction()
     {
         //Arrange
         var sut = new Result<string>(new ApplicationException("Test"));
 
         //Act
-        var result = sut.IfFailure(e => e.Message);
+        var result = sut.WhenFailure(e => e.Message);
 
         //Assert
         Assert.False(sut.IsSuccess);
@@ -193,14 +193,14 @@ public class ResultTests
     }
 
     [Fact]
-    public void IfFailure_WhenSuccessful_DoesntCallAction()
+    public void WhenFailure_WhenSuccessful_DoesntCallAction()
     {
         //Arrange
         var isCalled = false;
         var sut = new Result();
 
         //Act
-        sut.IfFailure((e) =>
+        sut.WhenFailure((e) =>
         {
             isCalled = true;
         });
