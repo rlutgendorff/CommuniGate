@@ -2,6 +2,7 @@
 using CommuniGate.Events;
 using CommuniGate.Middlewares;
 using CommuniGate.Results;
+using CommuniGate.Tests.TestObjects.Handlers;
 
 namespace CommuniGate.Tests.TestObjects.Pipelines;
 
