@@ -1,6 +1,6 @@
 ﻿using CommuniGate.Events;
 
-namespace CommuniGate.Tests.TestObjects;
+namespace CommuniGate.Tests.TestObjects.Handlers;
 
 public class TestEvent : IEvent
 {}

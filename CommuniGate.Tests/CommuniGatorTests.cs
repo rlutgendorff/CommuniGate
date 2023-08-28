@@ -1,6 +1,7 @@
 using CommuniGate.Extensions;
 using CommuniGate.Tests.TestObjects;
 using CommuniGate.Tests.TestObjects.Handlers;
+using CommuniGate.Tests.TestObjects.Pipelines;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommuniGate.Tests
@@ -27,9 +28,11 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new TestQuery(), CancellationToken.None);
+            var result = await sut!.Execute(new TestQuery{Name = "Rolf"}, CancellationToken.None);
 
             //Assert
+            Assert.False(result.IsSuccess);
+            Assert.IsType<ApplicationException>(result.Exception);
         }
 
         [Fact]
@@ -39,7 +42,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new WithResultCommand { Test = 1}, CancellationToken.None);
+            var result = await sut!.Execute(new WithResultCommand { Test = 1}, CancellationToken.None);
 
             //Assert
         }
@@ -51,7 +54,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new WithoutResultCommand(), CancellationToken.None);
+            var result = await sut!.Execute(new WithoutResultCommand(), CancellationToken.None);
 
             //Assert
         }
@@ -83,7 +86,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            await sut.Publish(new TestEvent(), CancellationToken.None);
+            await sut!.Publish(new TestEvent(), CancellationToken.None);
 
             //Assert
             Assert.Contains(nameof(TestEventPipelineMiddleware), calledPipelines);
@@ -100,7 +103,7 @@ namespace CommuniGate.Tests
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
-            var result = await sut.Execute(new ExceptionCommand(), CancellationToken.None);
+            var result = await sut!.Execute(new ExceptionCommand(), CancellationToken.None);
 
             //Assert
             Assert.False(result.IsSuccess);

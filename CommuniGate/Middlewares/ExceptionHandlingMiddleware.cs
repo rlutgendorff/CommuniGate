@@ -19,15 +19,15 @@ public class ExceptionHandlingMiddleware<TRequest> : IPipelineMiddleware<TReques
 
 public class ExceptionHandlingMiddleware<TRequest, TResponse> : IPipelineMiddleware<TRequest, TResponse>
 {
-    public Task<IResult<TResponse>> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<IResult<TResponse>> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         try
         {
-            return next.Invoke();
+            return await next.Invoke();
         }
         catch (Exception ex)
         {
-            return Task.FromResult<IResult<TResponse>>(new Result<TResponse>(ex));
+            return new Result<TResponse>(ex);
         }
     }
 }

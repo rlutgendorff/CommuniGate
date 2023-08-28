@@ -23,12 +23,12 @@ public record Result : IResult
         else failure(Exception!);
     }
 
-    public void IfSuccess(Action action)
+    public void WhenSuccess(Action action)
     {
         if (IsSuccess) action();
     }
 
-    public void IfFailure(Action<Exception> action)
+    public void WhenFailure(Action<Exception> action)
     {
         if (!IsSuccess) action(Exception!);
     }
@@ -47,24 +47,24 @@ public record Result<TResult> : Result, IResult<TResult>
 
     public TResult? Value { get; }
 
-    public IResult<TResult> IfSuccess(Func<TResult, TResult> func)
+    public IResult<TResult> WhenSuccess(Func<TResult, TResult> func)
     {
         return IsSuccess ? new Result<TResult>(func(Value!)) : this;
     }
 
-    public void IfSuccess(Action<TResult> action)
+    public void WhenSuccess(Action<TResult> action)
     {
         if (IsSuccess) action(Value!);
     }
 
-    public IResult<TResult> IfFailure(Func<Exception, TResult> func)
+    public IResult<TResult> WhenFailure(Func<Exception, TResult> func)
     {
         return !IsSuccess ? new Result<TResult>(func(Exception!)) : this;
     }
 
     public IResult<TResult> Match(Func<TResult, TResult> success, Func<Exception, TResult> failure)
     {
-        return !IsSuccess ? new Result<TResult>(Value!) : new Result<TResult>(failure(Exception!));
+        return IsSuccess ? new Result<TResult>(success(Value!)) : new Result<TResult>(failure(Exception!));
     }
 
     public IResult<TMapped> Map<TMapped>(Func<TResult, TMapped> success)

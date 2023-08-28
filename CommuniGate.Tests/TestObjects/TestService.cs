@@ -2,13 +2,13 @@
 
 public interface ITestService
 {
-    string Test();
+    string Test(string name);
 }
 
 public class TestService : ITestService
 {
-    public string Test()
+    public string Test(string name)
     {
-        return "Test";
+        return $"Hello {name}";
     }
 }

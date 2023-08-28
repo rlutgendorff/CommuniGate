@@ -3,7 +3,7 @@ using CommuniGate.Events;
 using CommuniGate.Middlewares;
 using CommuniGate.Results;
 
-namespace CommuniGate.Tests.TestObjects;
+namespace CommuniGate.Tests.TestObjects.Pipelines;
 
 public class TestPipelineMiddleware : IPipelineMiddleware<WithResultCommand, int>
 {
