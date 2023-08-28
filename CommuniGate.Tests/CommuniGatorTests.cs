@@ -1,6 +1,7 @@
 using CommuniGate.Extensions;
 using CommuniGate.Tests.TestObjects;
 using CommuniGate.Tests.TestObjects.Handlers;
+using CommuniGate.Tests.TestObjects.Pipelines;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommuniGate.Tests
