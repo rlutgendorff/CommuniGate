@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommuniGate", "CommuniGate\CommuniGate.csproj", "{3649C19D-2452-4D8A-BA2E-AA350FA742D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommuniGate.Tests", "CommuniGate.Tests\CommuniGate.Tests.csproj", "{FCCC5CFA-FF5A-485C-B541-81F809C9B6A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommuniGate.Tests", "CommuniGate.Tests\CommuniGate.Tests.csproj", "{FCCC5CFA-FF5A-485C-B541-81F809C9B6A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommuniGate.EventSourcing", "CommuniGate.EventSourcing\CommuniGate.EventSourcing.csproj", "{5A7432A3-487C-4750-9D82-1DF2318C78B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FCCC5CFA-FF5A-485C-B541-81F809C9B6A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCCC5CFA-FF5A-485C-B541-81F809C9B6A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCCC5CFA-FF5A-485C-B541-81F809C9B6A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A7432A3-487C-4750-9D82-1DF2318C78B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A7432A3-487C-4750-9D82-1DF2318C78B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A7432A3-487C-4750-9D82-1DF2318C78B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A7432A3-487C-4750-9D82-1DF2318C78B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
