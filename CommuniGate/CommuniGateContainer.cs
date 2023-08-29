@@ -23,19 +23,16 @@ internal class CommuniGateContainer
 
         Container.Collection.Register(typeof(IEventHandler<>), assembliesToScan);
 
-
-        RegisterHandlers(Container, typeof(IEventPipelineMiddleware<>), assembliesToScan);
-        RegisterHandlers(Container, typeof(IPipelineMiddleware<>), assembliesToScan);
-        RegisterHandlers(Container, typeof(IPipelineMiddleware<,>), assembliesToScan);
-        RegisterHandlers(Container, typeof(IPreExecution<>), assembliesToScan);
-        RegisterHandlers(Container, typeof(IPostExecution<,>), assembliesToScan);
-
-        
+        RegisterHandlers(typeof(IEventPipelineMiddleware<>), assembliesToScan);
+        RegisterHandlers(typeof(IPipelineMiddleware<>), assembliesToScan);
+        RegisterHandlers(typeof(IPipelineMiddleware<,>), assembliesToScan);
+        RegisterHandlers(typeof(IPreExecution<>), assembliesToScan);
+        RegisterHandlers(typeof(IPostExecution<,>), assembliesToScan);
     }
 
-    private static void RegisterHandlers(Container container, Type collectionType, Assembly[] assemblies)
+    private void RegisterHandlers(Type collectionType, IEnumerable<Assembly> assemblies)
     {
-        var handlerTypes = container.GetTypesToRegister(collectionType, assemblies, new TypesToRegisterOptions
+        var handlerTypes = Container.GetTypesToRegister(collectionType, assemblies, new TypesToRegisterOptions
         {
             IncludeGenericTypeDefinitions = true,
             IncludeComposites = false,
@@ -44,7 +41,7 @@ internal class CommuniGateContainer
         handlerTypes = handlerTypes.Where(x =>
             x != typeof(ExceptionHandlingMiddleware<,>) && x != typeof(ExceptionHandlingMiddleware<>));
 
-        container.Collection.Register(collectionType, handlerTypes);
+        Container.Collection.Register(collectionType, handlerTypes);
     }
 
     private Assembly[] AddThisAssemblyToAssemblies(Assembly[] assembliesToScan)

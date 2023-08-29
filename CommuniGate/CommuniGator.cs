@@ -22,19 +22,19 @@ public class CommuniGator : ICommuniGator
     {
         var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
 
-        return ExecuteWithResponse<IQuery<TResponse>, TResponse>(handlerType, query, cancellationToken);
+        return Execute<IQuery<TResponse>, TResponse>(handlerType, query, cancellationToken);
     }
 
     public Task<IResult<TResponse>> Execute<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
     {
         var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResponse));
-        return ExecuteWithResponse<ICommand<TResponse>, TResponse>(handlerType, command, cancellationToken);
+        return Execute<ICommand<TResponse>, TResponse>(handlerType, command, cancellationToken);
     }
 
     public Task<IResult> Execute(ICommand command, CancellationToken cancellationToken = default)
     {
         var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
-        return ExecuteWithoutResponse<ICommand>(handlerType, command, cancellationToken);
+        return Execute(handlerType, command, cancellationToken);
     }
 
     public Task Publish(IEvent @event, CancellationToken cancellationToken = default)
@@ -43,7 +43,7 @@ public class CommuniGator : ICommuniGator
         return Publish(handlerType, @event, cancellationToken);
     }
 
-    private Task Publish(Type handlerType, IEvent @event, CancellationToken cancellationToken = default)
+    internal Task Publish(Type handlerType, IEvent @event, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
         {
@@ -65,7 +65,7 @@ public class CommuniGator : ICommuniGator
         }
     }
 
-    private Task<IResult<TResponse>> ExecuteWithResponse<TCommunication, TResponse>(Type handlerType, TCommunication obj, CancellationToken cancellationToken = default)
+    internal Task<IResult<TResponse>> Execute<TCommunication, TResponse>(Type handlerType, TCommunication obj, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
         {
@@ -84,7 +84,7 @@ public class CommuniGator : ICommuniGator
         }
     }
 
-    private Task<IResult> ExecuteWithoutResponse<TCommunication>(Type handlerType, TCommunication obj, CancellationToken cancellationToken = default)
+    internal Task<IResult> Execute<TCommunication>(Type handlerType, TCommunication obj, CancellationToken cancellationToken = default)
     {
         using (AsyncScopedLifestyle.BeginScope(_container))
         {
