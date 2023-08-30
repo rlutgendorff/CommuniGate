@@ -8,7 +8,36 @@ using SimpleInjector.Lifestyles;
 
 namespace CommuniGate;
 
-internal class CommuniGateContainer
+public interface ICommuniGateContainer
+{
+    object GetInstance(Type serviceType);
+    IEnumerable<object> GetAllInstances(Type serviceType);
+    IEnumerable<TService> GetAllInstances<TService>() where TService : class;
+
+    ICommuniGateScope CreateScope();
+}
+
+public interface ICommuniGateScope : IDisposable
+{
+
+}
+
+public class CommuniGateScope : ICommuniGateScope
+{
+    private readonly Scope _scope;
+
+    public CommuniGateScope(Scope scope)
+    {
+        _scope = scope;
+    }
+
+    public void Dispose()
+    {
+        _scope.Dispose();
+    }
+}
+
+internal class CommuniGateContainer : ICommuniGateContainer
 {
     internal Container Container { get; } = Create();
 
@@ -21,13 +50,33 @@ internal class CommuniGateContainer
         Container.Register(typeof(ICommandHandler<>), assembliesToScan);
         Container.Register(typeof(ICommandHandler<,>), assembliesToScan);
 
-        Container.Collection.Register(typeof(IEventHandler<>), assembliesToScan);
+        Container.Collection.Register(typeof(IEventNotificationHandler<>), assembliesToScan);
 
         RegisterHandlers(typeof(IEventPipelineMiddleware<>), assembliesToScan);
         RegisterHandlers(typeof(IPipelineMiddleware<>), assembliesToScan);
         RegisterHandlers(typeof(IPipelineMiddleware<,>), assembliesToScan);
         RegisterHandlers(typeof(IPreExecution<>), assembliesToScan);
         RegisterHandlers(typeof(IPostExecution<,>), assembliesToScan);
+    }
+
+    public object GetInstance(Type serviceType)
+    {
+        return Container.GetInstance(serviceType);
+    }
+
+    public IEnumerable<object> GetAllInstances(Type serviceType)
+    {
+        return Container.GetAllInstances(serviceType);
+    }
+
+    public IEnumerable<TService> GetAllInstances<TService>() where TService : class
+    {
+        return Container.GetAllInstances<TService>();
+    }
+
+    public ICommuniGateScope CreateScope()
+    {
+        return new CommuniGateScope(AsyncScopedLifestyle.BeginScope(Container));
     }
 
     private void RegisterHandlers(Type collectionType, IEnumerable<Assembly> assemblies)
@@ -60,4 +109,6 @@ internal class CommuniGateContainer
 
         return container;
     }
+
+    
 }

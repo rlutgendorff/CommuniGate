@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CommuniGate\CommuniGate.csproj" />
+  </ItemGroup>
+
 </Project>

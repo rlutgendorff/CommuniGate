@@ -71,13 +71,13 @@ namespace CommuniGate.Tests
             };
 
             var calledHandlers = new List<string>();
-            TestEventHandler.OnHandling += (sender, _) =>
+            TestEventNotificationHandler.OnHandling += (sender, _) =>
             {
                 var name = sender?.GetType().Name;
                 if (name != null) calledHandlers.Add(name);
             };
 
-            TestEventHandler2.OnHandling += (sender, _) =>
+            TestEventNotificationHandler2.OnHandling += (sender, _) =>
             {
                 var name = sender?.GetType().Name;
                 if (name != null) calledHandlers.Add(name);
@@ -91,8 +91,8 @@ namespace CommuniGate.Tests
             //Assert
             Assert.Contains(nameof(TestEventPipelineMiddleware), calledPipelines);
             Assert.Collection(calledHandlers, 
-                item => Assert.Contains(nameof(TestEventHandler), item), 
-                item => Assert.Contains(nameof(TestEventHandler2), item));
+                item => Assert.Contains(nameof(TestEventNotificationHandler), item), 
+                item => Assert.Contains(nameof(TestEventNotificationHandler2), item));
         }
 
         [Fact]
