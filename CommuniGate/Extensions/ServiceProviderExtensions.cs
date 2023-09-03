@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommuniGate.Containers;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 
 namespace CommuniGate.Extensions;

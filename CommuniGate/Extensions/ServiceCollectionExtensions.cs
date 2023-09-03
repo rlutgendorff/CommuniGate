@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using CommuniGate.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 
@@ -12,6 +13,7 @@ public static class ServiceCollectionExtensions
         var container = new CommuniGateContainer();
 
         services.AddSingleton<ICommuniGator, CommuniGator>();
+        services.AddSingleton<ICommuniGateContainer>(_ => container);
         services.AddSingleton(container);
         
 

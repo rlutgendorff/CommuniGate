@@ -2,7 +2,7 @@
 
 namespace CommuniGate.EventSourcing;
 
-public delegate Task<IResult> EventHandlerDelegate();
+public delegate Task EventHandlerDelegate();
 
 public interface IEventPipelineMiddleware<in TEntity, in TEvent>
 {

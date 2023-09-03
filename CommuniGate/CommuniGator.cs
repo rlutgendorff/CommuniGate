@@ -1,10 +1,9 @@
 ﻿using CommuniGate.Commands;
 using CommuniGate.Middlewares;
 using CommuniGate.Queries;
-using SimpleInjector;
-using SimpleInjector.Lifestyles;
 using CommuniGate.Events;
 using CommuniGate.Results;
+using CommuniGate.Containers;
 
 namespace CommuniGate;
 

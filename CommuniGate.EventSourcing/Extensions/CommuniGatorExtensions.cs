@@ -1,19 +1,18 @@
 ﻿using CommuniGate.Events;
-using CommuniGate.Results;
 
 namespace CommuniGate.EventSourcing.Extensions;
 
 public static class CommuniGatorExtensions
 {
-    public static void Execute<TEntity, TEvent>(this CommuniGator communiGator, TEntity entity, TEvent @event,
+    public static Task Execute<TEntity, TEvent>(this ICommuniGator communiGator, TEntity entity, TEvent @event,
         CancellationToken cancellationToken = default)
         where TEvent : IEvent
     {
         var handlerType = typeof(IEventHandler<,>).MakeGenericType(typeof(TEntity), typeof(TEvent));
 
-        communiGator.Execute(container =>
+        return communiGator.Execute(container =>
         {
-            Task<IResult> Handler() => (Task<IResult>)
+            Task Handler() => 
                 ((dynamic)container.GetInstance(handlerType))
                 .HandleAsync((dynamic)entity!, @event, cancellationToken);
 
@@ -23,7 +22,7 @@ public static class CommuniGatorExtensions
                     (next, pipeline) => () =>
                         pipeline.Handle((dynamic)entity!, (dynamic)@event, next, cancellationToken));
 
-            return (Task)pipeline();
+            return pipeline();
 
             //var e = new ExceptionHandlingMiddleware<TCommunication, TResponse>();
 
