@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommuniGate.EventSourcing.Abstraction\CommuniGate.EventSourcing.Abstraction.csproj" />
-    <ProjectReference Include="..\CommuniGate\CommuniGate.csproj" />
+    <ProjectReference Include="..\CommuniGate.Container.Abstraction\CommuniGate.Container.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

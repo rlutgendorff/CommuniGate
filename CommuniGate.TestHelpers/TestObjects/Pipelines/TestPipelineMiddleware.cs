@@ -1,5 +1,4 @@
 ﻿using CommuniGate.Bases;
-using CommuniGate.Events;
 using CommuniGate.Middlewares;
 using CommuniGate.Results;
 using CommuniGate.TestHelpers.TestObjects.Handlers;

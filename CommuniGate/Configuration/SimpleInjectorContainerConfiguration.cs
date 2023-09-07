@@ -1,5 +1,4 @@
 ﻿using CommuniGate.Commands;
-using CommuniGate.Events;
 using CommuniGate.Middlewares;
 using CommuniGate.Queries;
 using System.Reflection;
@@ -16,15 +15,13 @@ public class SimpleInjectorContainerConfiguration : BaseSimpleInjectorContainerC
         container.Register(typeof(ICommandHandler<>), assemblies);
         container.Register(typeof(ICommandHandler<,>), assemblies);
 
-        container.Collection.Register(typeof(IEventNotificationHandler<>), assemblies);
-
         var excluded = new[]
         {
             typeof(ExceptionHandlingMiddleware<,>),
             typeof(ExceptionHandlingMiddleware<>)
         };
 
-        RegisterHandlers(container, typeof(IEventPipelineMiddleware<>), assemblies, excluded);
+        
         RegisterHandlers(container, typeof(IPipelineMiddleware<>), assemblies, excluded);
         RegisterHandlers(container, typeof(IPipelineMiddleware<,>), assemblies, excluded);
         RegisterHandlers(container, typeof(IPreExecution<>), assemblies, excluded);

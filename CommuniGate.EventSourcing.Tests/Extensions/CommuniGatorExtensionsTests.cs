@@ -1,9 +1,10 @@
-﻿using CommuniGate.Extensions;
+﻿using CommuniGate.EventSourcing.Abstraction;
+using CommuniGate.Extensions;
 using CommuniGate.TestHelpers.TestObjects;
 using CommuniGate.EventSourcing.Extensions;
 using CommuniGate.EventSourcing.Tests.TestObjects;
 using CommuniGate.Middlewares;
-using CommuniGate.TestHelpers.TestObjects.Handlers;
+using CommuniGate.EventSourcing.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommuniGate.EventSourcing.Tests.Extensions;

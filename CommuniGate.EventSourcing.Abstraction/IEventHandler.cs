@@ -1,6 +1,6 @@
 ﻿using CommuniGate.Events;
 
-namespace CommuniGate.EventSourcing;
+namespace CommuniGate.EventSourcing.Abstraction;
 
 public interface IEventHandler<in TEntity, in TEvent>
     where TEvent : class, IEvent

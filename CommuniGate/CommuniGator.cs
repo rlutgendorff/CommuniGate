@@ -2,7 +2,6 @@
 using CommuniGate.Container.Abstraction;
 using CommuniGate.Middlewares;
 using CommuniGate.Queries;
-using CommuniGate.Events;
 using CommuniGate.Results;
 
 namespace CommuniGate;
@@ -36,11 +35,7 @@ public class CommuniGator : ICommuniGator
         return Execute(handlerType, command, cancellationToken);
     }
 
-    public Task Publish(IEvent @event, CancellationToken cancellationToken = default)
-    {
-        var handlerType = typeof(IEventNotificationHandler<>).MakeGenericType(@event.GetType());
-        return Publish(handlerType, @event, cancellationToken);
-    }
+   
 
     public Task Execute(Func<ICommuniGateContainer, Task> func)
     {
@@ -63,28 +58,6 @@ public class CommuniGator : ICommuniGator
         using (_container.CreateScope())
         {
             return func(_container);
-        }
-    }
-
-    internal Task Publish(Type handlerType, IEvent @event, CancellationToken cancellationToken = default)
-    {
-        using (_container.CreateScope())
-        {
-            Task Handler()
-            {
-                var handlers = (List<dynamic>)_container.GetAllInstances(handlerType).ToList();
-
-                return Task
-                    .WhenAll(handlers.Select(x => x.HandleAsync((dynamic)@event, cancellationToken))
-                    .Cast<Task>()
-                    .ToArray());
-            }
-
-            return _container
-                .GetAllInstances<IEventPipelineMiddleware<IEvent>>()
-                .Reverse()
-                .Aggregate((EventHandlerDelegate)Handler,
-                    (next, pipeline) => () => pipeline.Handle((dynamic)@event, next, cancellationToken))();
         }
     }
 

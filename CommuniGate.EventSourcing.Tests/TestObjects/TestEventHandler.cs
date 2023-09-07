@@ -1,10 +1,14 @@
 ﻿using CommuniGate.Events;
+using CommuniGate.EventSourcing.Abstraction;
+using CommuniGate.EventSourcing.Abstraction.Aggregates;
 
 namespace CommuniGate.EventSourcing.Tests.TestObjects;
 
-public class TestEntity
+public class TestEntity : IAggregate
 {
     public string Status { get; set; } = "No Change";
+    public Guid Id { get; set; }
+    public long? Version { get; }
 }
 
 public class TestEntityEvent : IEvent
