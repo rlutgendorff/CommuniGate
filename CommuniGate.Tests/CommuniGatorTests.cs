@@ -16,7 +16,7 @@ namespace CommuniGate.Tests
             var services = new ServiceCollection();
             services.AddTransient<ITestService, TestService>();
 
-            services.AddCommuniGate(new[] { GetType().Assembly, typeof(TestService).Assembly });
+            services.AddCommuniGate(new[] { GetType().Assembly, typeof(TestService).Assembly, typeof(ICommandHandler<,>).Assembly });
 
             _serviceProvider = services.BuildServiceProvider();
             _serviceProvider.UseCommuniGate();
