@@ -1,7 +1,7 @@
 ﻿using CommuniGate.Queries;
 using CommuniGate.Results;
 
-namespace CommuniGate.Tests.TestObjects.Handlers;
+namespace CommuniGate.TestHelpers.TestObjects.Handlers;
 
 public sealed class TestQuery : IQuery<string>
 {

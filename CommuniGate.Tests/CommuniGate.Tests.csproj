@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommuniGate.TestHelpers\CommuniGate.TestHelpers.csproj" />
     <ProjectReference Include="..\CommuniGate\CommuniGate.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿namespace CommuniGate.Tests.TestObjects;
+﻿namespace CommuniGate.TestHelpers.TestObjects;
 
 public interface ITestService
 {

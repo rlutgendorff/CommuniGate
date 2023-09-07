@@ -1,11 +1,11 @@
 ﻿using CommuniGate.Events;
 
-namespace CommuniGate.Tests.TestObjects.Handlers;
+namespace CommuniGate.TestHelpers.TestObjects.Handlers;
 
 public class TestEvent : IEvent
 {}
 
-public class TestEventHandler : IEventHandler<TestEvent>
+public class TestEventNotificationHandler : IEventNotificationHandler<TestEvent>
 {
     public static event EventHandler? OnHandling;
 
@@ -17,7 +17,7 @@ public class TestEventHandler : IEventHandler<TestEvent>
     }
 }
 
-public class TestEventHandler2 : IEventHandler<TestEvent>
+public class TestEventNotificationHandler2 : IEventNotificationHandler<TestEvent>
 {
     public static event EventHandler? OnHandling;
 

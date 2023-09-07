@@ -1,7 +1,8 @@
+using CommuniGate.Commands;
 using CommuniGate.Extensions;
-using CommuniGate.Tests.TestObjects;
-using CommuniGate.Tests.TestObjects.Handlers;
-using CommuniGate.Tests.TestObjects.Pipelines;
+using CommuniGate.TestHelpers.TestObjects;
+using CommuniGate.TestHelpers.TestObjects.Handlers;
+using CommuniGate.TestHelpers.TestObjects.Pipelines;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommuniGate.Tests
@@ -15,7 +16,7 @@ namespace CommuniGate.Tests
             var services = new ServiceCollection();
             services.AddTransient<ITestService, TestService>();
 
-            services.AddCommuniGate(new[] { this.GetType().Assembly });
+            services.AddCommuniGate(new[] { GetType().Assembly, typeof(TestService).Assembly });
 
             _serviceProvider = services.BuildServiceProvider();
             _serviceProvider.UseCommuniGate();
@@ -71,13 +72,13 @@ namespace CommuniGate.Tests
             };
 
             var calledHandlers = new List<string>();
-            TestEventHandler.OnHandling += (sender, _) =>
+            TestEventNotificationHandler.OnHandling += (sender, _) =>
             {
                 var name = sender?.GetType().Name;
                 if (name != null) calledHandlers.Add(name);
             };
 
-            TestEventHandler2.OnHandling += (sender, _) =>
+            TestEventNotificationHandler2.OnHandling += (sender, _) =>
             {
                 var name = sender?.GetType().Name;
                 if (name != null) calledHandlers.Add(name);
@@ -91,15 +92,14 @@ namespace CommuniGate.Tests
             //Assert
             Assert.Contains(nameof(TestEventPipelineMiddleware), calledPipelines);
             Assert.Collection(calledHandlers, 
-                item => Assert.Contains(nameof(TestEventHandler), item), 
-                item => Assert.Contains(nameof(TestEventHandler2), item));
+                item => Assert.Contains(nameof(TestEventNotificationHandler), item), 
+                item => Assert.Contains(nameof(TestEventNotificationHandler2), item));
         }
 
         [Fact]
         public async Task Execute_ThrowsException_ResultIsFailed()
         {
             //Arrange
-
             var sut = _serviceProvider.GetService<ICommuniGator>();
 
             //Act
@@ -107,6 +107,54 @@ namespace CommuniGate.Tests
 
             //Assert
             Assert.False(result.IsSuccess);
+        }
+
+        [Fact]
+        public async Task Execute_WithFuncTask_FuncExecuted()
+        {
+            //Arrange
+            var sut = _serviceProvider.GetService<ICommuniGator>();
+
+            //Act
+            await sut!.Execute(container =>
+            {
+                var handler = container.GetInstance(typeof(ICommandHandler<WithoutResultCommand>));
+                return Task.CompletedTask;
+            });
+
+            //Assert
+        }
+
+        [Fact]
+        public async Task Execute_()
+        {
+            //Arrange
+            var sut = _serviceProvider.GetService<ICommuniGator>();
+
+            //Act
+            var result = await sut!.Execute(container =>
+            {
+                var handler = (WithoutResultCommandHandler)container.GetInstance(typeof(ICommandHandler<WithoutResultCommand>));
+                return handler.HandleAsync(new WithoutResultCommand());
+            });
+
+            //Assert
+        }
+
+        [Fact]
+        public async Task Execute_2()
+        {
+            //Arrange
+            var sut = _serviceProvider.GetService<ICommuniGator>();
+
+            //Act
+            var result = await sut!.Execute<int>(container =>
+            {
+                var handler = (WithResultCommandHandler)container.GetInstance(typeof(ICommandHandler<WithResultCommand, int>));
+                return handler.HandleAsync(new WithResultCommand());
+            });
+
+            //Assert
         }
     }
 }

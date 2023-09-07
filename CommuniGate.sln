@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommuniGate.EventSourcing",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0E407842-C6E9-42D8-AF86-2868C252DCE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommuniGate.EventSourcing.Tests", "CommuniGate.EventSourcing.Tests\CommuniGate.EventSourcing.Tests.csproj", "{EB769DDB-96EF-4C3F-BB19-44A9CF2E342C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommuniGate.EventSourcing.Tests", "CommuniGate.EventSourcing.Tests\CommuniGate.EventSourcing.Tests.csproj", "{EB769DDB-96EF-4C3F-BB19-44A9CF2E342C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommuniGate.TestHelpers", "CommuniGate.TestHelpers\CommuniGate.TestHelpers.csproj", "{BDF02513-069F-412C-92F2-A3AB3F0315B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{EB769DDB-96EF-4C3F-BB19-44A9CF2E342C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB769DDB-96EF-4C3F-BB19-44A9CF2E342C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB769DDB-96EF-4C3F-BB19-44A9CF2E342C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDF02513-069F-412C-92F2-A3AB3F0315B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDF02513-069F-412C-92F2-A3AB3F0315B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDF02513-069F-412C-92F2-A3AB3F0315B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDF02513-069F-412C-92F2-A3AB3F0315B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{FCCC5CFA-FF5A-485C-B541-81F809C9B6A5} = {0E407842-C6E9-42D8-AF86-2868C252DCE0}
 		{EB769DDB-96EF-4C3F-BB19-44A9CF2E342C} = {0E407842-C6E9-42D8-AF86-2868C252DCE0}
+		{BDF02513-069F-412C-92F2-A3AB3F0315B4} = {0E407842-C6E9-42D8-AF86-2868C252DCE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {584F78DC-9531-460D-A341-42BBBCD48B68}

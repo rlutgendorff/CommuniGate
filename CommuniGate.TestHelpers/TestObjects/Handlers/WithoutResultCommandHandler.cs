@@ -1,7 +1,7 @@
 ﻿using CommuniGate.Commands;
 using CommuniGate.Results;
 
-namespace CommuniGate.Tests.TestObjects.Handlers;
+namespace CommuniGate.TestHelpers.TestObjects.Handlers;
 
 public class WithoutResultCommand : ICommand
 {

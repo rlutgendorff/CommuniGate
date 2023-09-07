@@ -1,7 +1,7 @@
 ﻿using CommuniGate.Middlewares;
-using CommuniGate.Tests.TestObjects.Handlers;
+using CommuniGate.TestHelpers.TestObjects.Handlers;
 
-namespace CommuniGate.Tests.TestObjects.Executions;
+namespace CommuniGate.TestHelpers.TestObjects.Executions;
 
 public class PreTestQueryExecution : IPreExecution<TestQuery>
 {

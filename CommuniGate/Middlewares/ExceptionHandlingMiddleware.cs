@@ -4,15 +4,15 @@ namespace CommuniGate.Middlewares;
 
 public class ExceptionHandlingMiddleware<TRequest> : IPipelineMiddleware<TRequest>
 {
-    public Task<IResult> Handle(TRequest request, RequestHandlerDelegate next, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(TRequest request, RequestHandlerDelegate next, CancellationToken cancellationToken)
     {
         try
         {
-            return next.Invoke();
+            return await next.Invoke();
         }
         catch (Exception ex)
         {
-            return Task.FromResult<IResult>(new Result(ex));
+            return new Result(ex);
         }
     }
 }
