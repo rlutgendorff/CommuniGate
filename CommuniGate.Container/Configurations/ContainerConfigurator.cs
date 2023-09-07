@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
-using SimpleInjector;
+using CommuniGate.Container.Abstraction.Configurations;
 
-namespace CommuniGate.Containers.Configurations;
+namespace CommuniGate.Container.Configurations;
 
 public class ContainerConfigurator
 {
-    public void Configure<TContainer>(Container container, Assembly[] assemblies)
+    public static void Configure<TContainer>(SimpleInjector.Container container, Assembly[] assemblies)
     {
         var desiredInterface = typeof(IContainerConfiguration<>);
         var desiredGenericType = typeof(TContainer);
@@ -26,7 +26,7 @@ public class ContainerConfigurator
                     assemblies
                 };
 
-                var result = methodInfo.Invoke(instance, @params);
+                methodInfo.Invoke(instance, @params);
             }
         }
     }

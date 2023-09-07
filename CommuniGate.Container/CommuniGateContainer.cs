@@ -1,18 +1,17 @@
 ﻿using System.Reflection;
-using CommuniGate.Containers.Configurations;
-using SimpleInjector;
+using CommuniGate.Container.Abstraction;
+using CommuniGate.Container.Configurations;
 using SimpleInjector.Lifestyles;
 
 namespace CommuniGate.Containers;
 
-internal class CommuniGateContainer : ICommuniGateContainer
+public class CommuniGateContainer : ICommuniGateContainer
 {
-    internal Container Container { get; } = Create();
+    internal SimpleInjector.Container Container { get; } = Create();
 
     internal void Init(Assembly[] assembliesToScan)
     {
-        var configurator = new ContainerConfigurator();
-        configurator.Configure<Container>(Container, assembliesToScan);
+        ContainerConfigurator.Configure<SimpleInjector.Container>(Container, assembliesToScan);
     }
 
     public object GetInstance(Type serviceType)
@@ -36,9 +35,9 @@ internal class CommuniGateContainer : ICommuniGateContainer
     }
     
 
-    private static Container Create()
+    private static SimpleInjector.Container Create()
     {
-        var container = new Container();
+        var container = new SimpleInjector.Container();
         container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
         return container;

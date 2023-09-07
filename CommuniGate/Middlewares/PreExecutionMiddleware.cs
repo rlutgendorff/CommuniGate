@@ -5,9 +5,9 @@ namespace CommuniGate.Middlewares;
 
 public class PreExecutionMiddleware<TRequest> : IPipelineMiddleware<TRequest>
 {
-    private readonly Container _container;
+    private readonly SimpleInjector.Container _container;
 
-    public PreExecutionMiddleware(Container container)
+    public PreExecutionMiddleware(SimpleInjector.Container container)
     {
         _container = container;
     }
@@ -27,9 +27,9 @@ public class PreExecutionMiddleware<TRequest> : IPipelineMiddleware<TRequest>
 
 public class PreExecutionMiddleware<TRequest, TResponse> : IPipelineMiddleware<TRequest, TResponse>
 {
-    private readonly Container _container;
+    private readonly SimpleInjector.Container _container;
 
-    public PreExecutionMiddleware(Container container)
+    public PreExecutionMiddleware(SimpleInjector.Container container)
     {
         _container = container;
     }
@@ -49,9 +49,9 @@ public class PreExecutionMiddleware<TRequest, TResponse> : IPipelineMiddleware<T
 
 public class PreEventExecutionMiddleware<TEvent> : IEventPipelineMiddleware<TEvent>
 {
-    private readonly Container _container;
+    private readonly SimpleInjector.Container _container;
 
-    public PreEventExecutionMiddleware(Container container)
+    public PreEventExecutionMiddleware(SimpleInjector.Container container)
     {
         _container = container;
     }

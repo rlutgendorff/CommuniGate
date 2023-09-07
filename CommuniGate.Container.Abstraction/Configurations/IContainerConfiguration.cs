@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace CommuniGate.Containers.Configurations;
+namespace CommuniGate.Container.Abstraction.Configurations;
 
 public interface IContainerConfiguration<in TContainer>
 {

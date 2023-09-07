@@ -1,4 +1,4 @@
-﻿namespace CommuniGate.Containers;
+﻿namespace CommuniGate.Container.Abstraction;
 
 public interface ICommuniGateScope : IDisposable
 {

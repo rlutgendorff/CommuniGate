@@ -1,6 +1,4 @@
-﻿using CommuniGate.Containers;
-using Microsoft.Extensions.DependencyInjection;
-using SimpleInjector;
+﻿using CommuniGate.Container.Extensions;
 
 namespace CommuniGate.Extensions;
 
@@ -8,9 +6,7 @@ public static class ServiceProviderExtensions
 {
     public static IServiceProvider UseCommuniGate(this IServiceProvider serviceProvider)
     {
-        var container = serviceProvider.GetService<CommuniGateContainer>()?.Container;
-
-        serviceProvider.UseSimpleInjector(container);
+        serviceProvider.UseCommuniGateContainer();
 
         return serviceProvider;
     }

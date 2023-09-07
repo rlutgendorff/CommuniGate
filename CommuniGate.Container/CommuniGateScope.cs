@@ -1,4 +1,5 @@
-﻿using SimpleInjector;
+﻿using CommuniGate.Container.Abstraction;
+using SimpleInjector;
 
 namespace CommuniGate.Containers;
 

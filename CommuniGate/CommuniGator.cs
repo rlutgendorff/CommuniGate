@@ -1,9 +1,9 @@
 ﻿using CommuniGate.Commands;
+using CommuniGate.Container.Abstraction;
 using CommuniGate.Middlewares;
 using CommuniGate.Queries;
 using CommuniGate.Events;
 using CommuniGate.Results;
-using CommuniGate.Containers;
 
 namespace CommuniGate;
 
