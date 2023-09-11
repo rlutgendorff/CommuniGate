@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommuniGate.Abstraction\CommuniGate.Abstraction.csproj" />
+    <PackageReference Include="Marten" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CommuniGate.Repository.Abstraction\CommuniGate.Repository.Abstraction.csproj" />
   </ItemGroup>
 

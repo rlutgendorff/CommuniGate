@@ -1,7 +1,8 @@
-﻿namespace CommuniGate.EventSourcing.Abstraction.Aggregates;
+﻿using CommuniGate.Repository.Abstraction;
 
-public interface IAggregate 
+namespace CommuniGate.EventSourcing.Abstraction.Aggregates;
+
+public interface IAggregate : IEntity
 {
-    public Guid Id { get; set; }
     long? Version { get; }
 }

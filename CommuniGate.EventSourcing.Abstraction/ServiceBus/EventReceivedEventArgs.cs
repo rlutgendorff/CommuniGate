@@ -2,5 +2,10 @@
 
 public class EventReceivedEventArgs : EventArgs
 {
-    public Message Message { get; set; }
+    public EventReceivedEventArgs(Message message)
+    {
+        Message = message;
+    }
+
+    public Message Message { get; }
 }
