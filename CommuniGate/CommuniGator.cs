@@ -1,4 +1,5 @@
-﻿using CommuniGate.Commands;
+﻿using CommuniGate.Abstraction.Commands;
+using CommuniGate.Commands;
 using CommuniGate.Container.Abstraction;
 using CommuniGate.Middlewares;
 using CommuniGate.Queries;

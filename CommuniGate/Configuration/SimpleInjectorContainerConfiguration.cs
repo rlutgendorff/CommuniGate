@@ -2,6 +2,7 @@
 using CommuniGate.Middlewares;
 using CommuniGate.Queries;
 using System.Reflection;
+using CommuniGate.Abstraction.Commands;
 using CommuniGate.Container.Configurations;
 
 namespace CommuniGate.Configuration;

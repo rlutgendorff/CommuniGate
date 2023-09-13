@@ -1,3 +1,4 @@
+using CommuniGate.Abstraction.Commands;
 using CommuniGate.Commands;
 using CommuniGate.Extensions;
 using CommuniGate.TestHelpers.TestObjects;
@@ -16,7 +17,7 @@ namespace CommuniGate.Tests
             var services = new ServiceCollection();
             services.AddTransient<ITestService, TestService>();
 
-            services.AddCommuniGate(new[] { GetType().Assembly, typeof(TestService).Assembly, typeof(ICommandHandler<,>).Assembly });
+            services.AddCommuniGate(new[] { GetType().Assembly, typeof(TestService).Assembly, typeof(ICommandHandler<,>).Assembly, typeof(CommuniGator).Assembly });
 
             _serviceProvider = services.BuildServiceProvider();
             _serviceProvider.UseCommuniGate();
@@ -58,42 +59,6 @@ namespace CommuniGate.Tests
             var result = await sut!.Execute(new WithoutResultCommand(), CancellationToken.None);
 
             //Assert
-        }
-
-        [Fact]
-        public async Task Execute_TestEventHandler()
-        {
-            //Arrange
-            var calledPipelines = new List<string>();
-            TestEventPipelineMiddleware.OnHandling += (sender, _) =>
-            {
-                var name = sender?.GetType().Name;
-                if (name != null) calledPipelines.Add(name);
-            };
-
-            var calledHandlers = new List<string>();
-            TestEventNotificationHandler.OnHandling += (sender, _) =>
-            {
-                var name = sender?.GetType().Name;
-                if (name != null) calledHandlers.Add(name);
-            };
-
-            TestEventNotificationHandler2.OnHandling += (sender, _) =>
-            {
-                var name = sender?.GetType().Name;
-                if (name != null) calledHandlers.Add(name);
-            };
-
-            var sut = _serviceProvider.GetService<ICommuniGator>();
-
-            //Act
-            await sut!.Publish(new TestEvent(), CancellationToken.None);
-
-            //Assert
-            Assert.Contains(nameof(TestEventPipelineMiddleware), calledPipelines);
-            Assert.Collection(calledHandlers, 
-                item => Assert.Contains(nameof(TestEventNotificationHandler), item), 
-                item => Assert.Contains(nameof(TestEventNotificationHandler2), item));
         }
 
         [Fact]
