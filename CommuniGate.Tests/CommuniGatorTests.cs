@@ -3,7 +3,6 @@ using CommuniGate.Commands;
 using CommuniGate.Extensions;
 using CommuniGate.TestHelpers.TestObjects;
 using CommuniGate.TestHelpers.TestObjects.Handlers;
-using CommuniGate.TestHelpers.TestObjects.Pipelines;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommuniGate.Tests
